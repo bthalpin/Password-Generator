@@ -29,13 +29,24 @@ function writePassword() {
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
+
 // Ask for length of password and repeats until a valid answer is given
 function getLength(){
-  lengthOfPassword = Number(prompt('enter password length'))
+  lengthOfPassword = (prompt('Please enter the number of characters for the password\n(8 - 128): '))
+  
+  // If cancel button was pressed it will return out of function
+  if (!lengthOfPassword){
+    return
+  }
+
+  // Converts the input for password length into a number rounded down to an integer
+  else {
+    lengthOfPassword = Math.floor(lengthOfPassword)
+  }
 
   // Repeats function if password is not a number in range
   if (!(lengthOfPassword>=8 && lengthOfPassword<=128)){
-    alert('Password must be between 8 and 128 characters')
+    alert('The password must be a number between 8 and 128 characters')
     return getLength()
   }
   return lengthOfPassword
@@ -43,15 +54,18 @@ function getLength(){
 
 // Asks for the allowed characters for the password and repeats until at least one option is selected
 function getCharacterOptions(){
-    let allowLower = confirm('Allow lowercase letters? (yes/no): ')
-    let allowUpper = confirm('Allow upercase letters? (yes/no): ')
-    let allowNumbers = confirm('Allow numbers? (yes/no): ')
-    let allowSpecial = confirm('Allow special characters? (yes/no): ')
+    let allowLower = confirm('Press Ok to allow Lowercase characters: ')
+    let allowUpper = confirm('Press Ok to allow Uppercase characters: ')
+    let allowNumbers = confirm('Press Ok to allow Numbers: ')
+    let allowSpecial = confirm('Press Ok to allow Special characters: ')
 
     // Repeats function until at least one option is selected
     if (!(allowLower || allowUpper || allowNumbers || allowSpecial)){
-      alert('You must select at least one type of character. ')
-      return getCharacterOptions()
+      let tryAgain = confirm('You must select at least one type of character. \nPress Ok to try again, or Cancel to Quit. ')
+      if (tryAgain){
+        return getCharacterOptions()
+      }
+      return
     }
 
     // Returns an object with the allowed characters
@@ -64,34 +78,66 @@ function getCharacterOptions(){
 }
 
 function generatePassword(){
+  
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
   // Array of possible values
-  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-  const upper = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-  const num = [1,2,3,4,5,6,7,8,9,0]
+  const lower = alphabet.split('');
+  const upper = (alphabet.toUpperCase()).split('');
+  const num = '1234567890'.split('');
   const special = [' ','!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~']
   
   // Gets the password length and character options
   let passwordLength = getLength()
+
+  // If cancel button was pressed it will return out of the function and display the placeholder text
+  if (!passwordLength){
+    return ''
+  }
   let passwordCharacters = getCharacterOptions()
 
-  // Adds the allowed characters to the array
+  // If cancel button was pressed it will return out of the function and display the placeholder text
+  if (!passwordCharacters){
+    return ''
+  }
+  // Adds the allowed characters to passwordBank and one of each to randomCharacter
   let passwordBank = []
+  let randomCharacter = []
+
+  function addAllowedCharacters(arrayType){
+    passwordBank.push(...arrayType);
+    randomCharacter.push(arrayType[parseInt(Math.random()*arrayType.length)]) ;
+  }
+
   if (passwordCharacters.allowLower){
-    passwordBank.push(...lower)
+    addAllowedCharacters(lower);
   }
   if (passwordCharacters.allowUpper){
-    passwordBank.push(...upper)
+    addAllowedCharacters(upper);
   }
   if (passwordCharacters.allowNumbers){
-    passwordBank.push(...num)
+    addAllowedCharacters(num);
   }
   if (passwordCharacters.allowSpecial){
-    passwordBank.push(...special)
+    addAllowedCharacters(special);
   }
 
   // Generates a random password from the passwordBank array
   let password='';
-  for (i=0;i<passwordLength;i++){
+
+  // The index will start in the first for loop and continue from its' current value in the second for loop
+  let index = 0;
+
+  // Starting length of the randomCharacter array to ensure the for loop continues as items are removed
+  let initialChosenArrayLength = randomCharacter.length
+
+  // Adds one random character to the password from each character type allowed 
+  for (index;index<initialChosenArrayLength;index++){
+    password+=randomCharacter.splice([parseInt(Math.random()*randomCharacter.length)],1)
+  }
+
+  // Adds random characters from the entire passwordBank for the remainder of the password
+  for (let i=index;i<passwordLength;i++){
     password+=passwordBank[parseInt(Math.random()*passwordBank.length)]
   }
   return password;
