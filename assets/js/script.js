@@ -103,13 +103,13 @@ function generatePassword(){
   }
 
 
-  // Adds the allowed characters to passwordBank and one of each to randomCharacter
+  // Adds the allowed characters to passwordBank and one of each to oneOfEachCharacter
   let passwordBank = []
-  let randomCharacter = []
+  let oneOfEachCharacter = []
 
   function addAllowedCharacters(arrayType){
     passwordBank.push(...arrayType);
-    randomCharacter.push(arrayType[parseInt(Math.random()*arrayType.length)]) ;
+    oneOfEachCharacter.push(arrayType[parseInt(Math.random()*arrayType.length)]) ;
   }
 
   if (passwordCharacters.allowLower){
@@ -132,12 +132,12 @@ function generatePassword(){
   // The index will start in the first for loop and continue from its' current value in the second for loop
   let index = 0;
 
-  // Starting length of the randomCharacter array to ensure the for loop continues as items are removed
-  let initialChosenArrayLength = randomCharacter.length
+  // Starting length of the oneOfEachCharacter array to ensure the for loop continues as items are removed
+  let numberOfCharacterTypes = oneOfEachCharacter.length
 
   // Adds one random character to the password from each character type allowed 
-  for (index;index<initialChosenArrayLength;index++){
-    password+=randomCharacter.splice([parseInt(Math.random()*randomCharacter.length)],1)
+  for (index;index<numberOfCharacterTypes;index++){
+    password+=oneOfEachCharacter.splice([parseInt(Math.random()*oneOfEachCharacter.length)],1)
   }
 
   // Adds random characters from the entire passwordBank for the remainder of the password
