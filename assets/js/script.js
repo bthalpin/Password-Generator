@@ -44,10 +44,10 @@ function getLength(){
     lengthOfPassword = Math.floor(lengthOfPassword)
   }
 
-  // Repeats function if password is not a number in range
+  // Returns if password is not a number in range
   if (!(lengthOfPassword>=8 && lengthOfPassword<=128)){
     alert('The password must be a number between 8 and 128 characters')
-    return getLength()
+    return 
   }
   return lengthOfPassword
 }
@@ -59,12 +59,9 @@ function getCharacterOptions(){
     let allowNumbers = confirm('Press Ok to allow Numbers: ')
     let allowSpecial = confirm('Press Ok to allow Special characters: ')
 
-    // Repeats function until at least one option is selected
+    // Returns if no option is selected
     if (!(allowLower || allowUpper || allowNumbers || allowSpecial)){
-      let tryAgain = confirm('You must select at least one type of character. \nPress Ok to try again, or Cancel to Quit. ')
-      if (tryAgain){
-        return getCharacterOptions()
-      }
+      alert('You must select at least one type of character. ')
       return
     }
 
@@ -77,6 +74,7 @@ function getCharacterOptions(){
     }
 }
 
+
 function generatePassword(){
   
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -87,19 +85,24 @@ function generatePassword(){
   const num = '1234567890'.split('');
   const special = [' ','!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~']
   
+
   // Gets the password length and character options
   let passwordLength = getLength()
 
-  // If cancel button was pressed it will return out of the function and display the placeholder text
+  // If a valid password length was not entered it will return out of the function and display the placeholder text
   if (!passwordLength){
     return ''
   }
+
+
   let passwordCharacters = getCharacterOptions()
 
-  // If cancel button was pressed it will return out of the function and display the placeholder text
+  // If no option was selected it will return out of the function and display the placeholder text
   if (!passwordCharacters){
     return ''
   }
+
+
   // Adds the allowed characters to passwordBank and one of each to randomCharacter
   let passwordBank = []
   let randomCharacter = []
@@ -121,6 +124,7 @@ function generatePassword(){
   if (passwordCharacters.allowSpecial){
     addAllowedCharacters(special);
   }
+
 
   // Generates a random password from the passwordBank array
   let password='';
